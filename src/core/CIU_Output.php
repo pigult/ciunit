@@ -1,4 +1,4 @@
-<?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
+<?php
 
 /*
 * fooStack, CIUnit for CodeIgniter
@@ -10,57 +10,57 @@
 /*
 * CodeIgniter source modified for fooStack / CIUnit
 *
-* If you use MY_Output, change the paraent class.
+* If you use MY_Output, change the parent class.
 */
 
-class CIU_Output extends Pigu_Output {
-
+class CIU_Output extends Pigu_Output
+{
 	function __construct()
 	{
 		parent::__construct();
 		$this->final_output = ''; //would be just set to 'null' in CI_Output
-		$this->_ci_ob_level  = ob_get_level();
+		$this->_ci_ob_level = ob_get_level();
 		$this->cookies = array();
 	}
 
 	/**
-	* store cookie headers
-	*/
+	 * store cookie headers
+	 */
 	function set_cookie($arr)
 	{
-		if ( ! is_array($arr))
-		{
+		if (!is_array($arr)) {
 			$arr = func_get_args();
 		}
 		$this->cookies[] = $arr;
 	}
 
 	/**
-	* Add to instead of replace final output
-	*/
+	 * Add to instead of replace final output
+	 */
 	function add_output($str)
 	{
 		$this->final_output .= $str;
 	}
 
 	/**
-	* Pop Output
-	*
-	* The final output the output class has stringed together is returned and truncated
-	*
-	*/
+	 * Pop Output
+	 *
+	 * The final output the output class has stringed together is returned and truncated
+	 *
+	 */
 	function pop_output()
 	{
 		$output = $this->final_output;
 		$this->final_output = "";
+
 		return $output;
 	}
 
 	/**
-	* set_no_cache_headers
-	* called as a post controller construction hook
-	* should count therefore as controller duty
-	*/
+	 * set_no_cache_headers
+	 * called as a post controller construction hook
+	 * should count therefore as controller duty
+	 */
 	function set_no_cache_headers()
 	{
 		//somehow $this can't be used as headers are not set in that case
@@ -79,11 +79,9 @@ class CIU_Output extends Pigu_Output {
 	{
 		$key = strtolower(array_shift(split(':', $header)));
 		$add = true;
-		foreach($this->headers as $hdr)
-		{
+		foreach ($this->headers as $hdr) {
 			$h = split(':', $hdr);
-			if(strtolower(array_shift($h)) == $key)
-			{
+			if (strtolower(array_shift($h)) == $key) {
 				$add = false;
 			}
 		}
@@ -99,10 +97,10 @@ class CIU_Output extends Pigu_Output {
 	}
 
 	/**
-	* say
-	* like normal echo but puts it in the output_buffer first, so we still can set headers
-	* and post process it
-	*/
+	 * say
+	 * like normal echo but puts it in the output_buffer first, so we still can set headers
+	 * and post process it
+	 */
 	function say($str)
 	{
 		ob_start();
@@ -111,18 +109,15 @@ class CIU_Output extends Pigu_Output {
 	}
 
 	/**
-	* ob_flush_clean
-	* flushes or cleans the buffer depending on if we are finished outputting or still on a nested level
-	*/
+	 * ob_flush_clean
+	 * flushes or cleans the buffer depending on if we are finished outputting or still on a nested level
+	 */
 	function ob_flush_clean()
 	{
 		$CI =& get_instance();
-		if (ob_get_level() > $this->_ci_ob_level + 1)
-		{
+		if (ob_get_level() > $this->_ci_ob_level + 1) {
 			ob_end_flush();
-		}
-		else
-		{
+		} else {
 			$this->add_output(ob_get_contents());
 			@ob_end_clean();
 		}
@@ -139,8 +134,11 @@ class CIU_Output extends Pigu_Output {
 	 * with any server headers and profile data. It also stops the
 	 * benchmark timer so the page rendering speed and memory usage can be shown.
 	 *
-	 * @access	public
-	 * @return	mixed
+	 * @access    public
+	 *
+	 * @param string $output
+	 *
+	 * @return    mixed
 	 */
 	function _display($output = '')
 	{
@@ -150,16 +148,14 @@ class CIU_Output extends Pigu_Output {
 		global $BM, $CFG;
 
 		// Grab the super object if we can.
-		if (class_exists('CI_Controller'))
-		{
+		if (class_exists('CI_Controller')) {
 			$CI =& get_instance();
 		}
 
 		// --------------------------------------------------------------------
 
 		// Set the output data
-		if ($output == '')
-		{
+		if ($output == '') {
 			$output =& $this->final_output;
 		}
 
@@ -168,8 +164,7 @@ class CIU_Output extends Pigu_Output {
 		// Do we need to write a cache file? Only if the controller does not have its
 		// own _output() method and we are not dealing with a cache file, which we
 		// can determine by the existence of the $CI object above
-		if ($this->cache_expiration > 0 && isset($CI) && ! method_exists($CI, '_output'))
-		{
+		if ($this->cache_expiration > 0 && isset($CI) && !method_exists($CI, '_output')) {
 			$this->_write_cache($output);
 		}
 
@@ -180,9 +175,8 @@ class CIU_Output extends Pigu_Output {
 
 		$elapsed = $BM->elapsed_time('total_execution_time_start', 'total_execution_time_end');
 
-		if ($this->parse_exec_vars === TRUE)
-		{
-			$memory	 = ( ! function_exists('memory_get_usage')) ? '0' : round(memory_get_usage()/1024/1024, 2).'MB';
+		if ($this->parse_exec_vars === true) {
+			$memory = (!function_exists('memory_get_usage')) ? '0' : round(memory_get_usage() / 1024 / 1024, 2) . 'MB';
 
 			$output = str_replace('{elapsed_time}', $elapsed, $output);
 			$output = str_replace('{memory_usage}', $memory, $output);
@@ -191,12 +185,11 @@ class CIU_Output extends Pigu_Output {
 		// --------------------------------------------------------------------
 
 		// Is compression requested?
-		if ($CFG->item('compress_output') === TRUE && $this->_zlib_oc == FALSE)
-		{
-			if (extension_loaded('zlib'))
-			{
-				if (isset($_SERVER['HTTP_ACCEPT_ENCODING']) AND strpos($_SERVER['HTTP_ACCEPT_ENCODING'], 'gzip') !== FALSE)
-				{
+		if ($CFG->item('compress_output') === true && $this->_zlib_oc == false) {
+			if (extension_loaded('zlib')) {
+				if (isset($_SERVER['HTTP_ACCEPT_ENCODING']) AND
+					strpos($_SERVER['HTTP_ACCEPT_ENCODING'], 'gzip') !== false
+				) {
 					ob_start('ob_gzhandler');
 				}
 			}
@@ -205,10 +198,8 @@ class CIU_Output extends Pigu_Output {
 		// --------------------------------------------------------------------
 
 		// Are there any server headers to send?
-		if (count($this->headers) > 0)
-		{
-			foreach ($this->headers as $header)
-			{
+		if (count($this->headers) > 0) {
+			foreach ($this->headers as $header) {
 				@header($header[0], $header[1]);
 				log_message('debug', "header '$header[0], $header[1]' set.");
 			}
@@ -217,51 +208,43 @@ class CIU_Output extends Pigu_Output {
 		// --------------------------------------------------------------------
 
 		// Are there any cookies to set?
-		if (count($this->cookies) > 0)
-		{
-			foreach ($this->cookies as $cookie)
-			{
-				call_user_func_array ( 'setcookie' , $cookie );
-				log_message('debug', "cookie '".join(', ', $cookie)."' set.");
+		if (count($this->cookies) > 0) {
+			foreach ($this->cookies as $cookie) {
+				call_user_func_array('setcookie', $cookie);
+				log_message('debug', "cookie '" . join(', ', $cookie) . "' set.");
 			}
 		}
-
 
 		// --------------------------------------------------------------------
 
 		// If not we know we are dealing with a cache file so we'll
 		// simply echo out the data and exit.
-		if ( ! isset($CI))
-		{
+		if (!isset($CI)) {
 			echo $output;
 			log_message('debug', "Final output sent to browser");
-			log_message('debug', "Total execution time: ".$elapsed);
-			return TRUE;
+			log_message('debug', "Total execution time: " . $elapsed);
+
+			return true;
 		}
 
 		// --------------------------------------------------------------------
 
 		// Do we need to generate profile data?
 		// If so, load the Profile class and run it.
-		if ($this->enable_profiler == TRUE)
-		{
+		if ($this->enable_profiler == true) {
 			$CI->load->library('profiler');
 
-			if ( ! empty($this->_profiler_sections))
-			{
+			if (!empty($this->_profiler_sections)) {
 				$CI->profiler->set_sections($this->_profiler_sections);
 			}
 
 			// If the output data contains closing </body> and </html> tags
 			// we will remove them and add them back after we insert the profile data
-			if (preg_match("|</body>.*?</html>|is", $output))
-			{
+			if (preg_match("|</body>.*?</html>|is", $output)) {
 				$output = preg_replace("|</body>.*?</html>|is", '', $output);
 				$output .= $CI->profiler->run();
 				$output .= '</body></html>';
-			}
-			else
-			{
+			} else {
 				$output .= $CI->profiler->run();
 			}
 		}
@@ -270,18 +253,13 @@ class CIU_Output extends Pigu_Output {
 
 		// Does the controller contain a function named _output()?
 		// If so send the output there. Otherwise, echo it.
-		if (method_exists($CI, '_output'))
-		{
+		if (method_exists($CI, '_output')) {
 			$CI->_output($output);
-		}
-		else
-		{
+		} else {
 			echo $output; // Send it to the browser!
 		}
 
 		log_message('debug', "Final output sent to browser");
-		log_message('debug', "Total execution time: ".$elapsed);
+		log_message('debug', "Total execution time: " . $elapsed);
 	}
-
-	// --------------------------------------------------------------------
 }
