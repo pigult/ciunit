@@ -1,5 +1,7 @@
 <?php
 
+die('This is only an example. Please create your own bootstrap based on this.');
+
 /*
 echo '<pre>';
 var_dump($GLOBALS);
