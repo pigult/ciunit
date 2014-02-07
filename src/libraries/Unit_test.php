@@ -1,4 +1,4 @@
-<?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
+<?php
 /**
  * CodeIgniter
  *
@@ -146,15 +146,15 @@ class CI_Unit_test {
 		$this->_parse_template();
 
 		$r = '';
-		
+
 		if (php_sapi_name() !== 'cli')
 		{
 			$CI->load->language('unit_test');
-			
+
 			foreach ($result as $res)
 			{
 				$table = '';
-	
+
 				foreach ($res as $key => $val)
 				{
 					if ($key == $CI->lang->line('ut_result'))
@@ -168,27 +168,27 @@ class CI_Unit_test {
 							$val = '<span style="color: #C00;">'.$val.'</span>';
 						}
 					}
-	
+
 					$temp = $this->_template_rows;
 					$temp = str_replace('{item}', $key, $temp);
 					$temp = str_replace('{result}', $val, $temp);
 					$table .= $temp;
 				}
-	
+
 				$r .= str_replace('{rows}', $table, $this->_template);
 			}
-	
+
 			return $r;
 		}
 		else
 		{
 			$CI->load->language('unit_test', 'english');	// force english
-			
+
 			$passed = 0;
 			$failed = 0;
 			$failed_test = array();
 			$count = 0;
-			
+
 			foreach ($result as $res)
 			{
 				if ($res['Result'] == 'Passed')
@@ -203,10 +203,10 @@ class CI_Unit_test {
 					$count += 1;
 				}
 			}
-			
+
 			$r1 = "Execute Unit Test!! \n\n";
 			$r2 = sprintf("All:%s Passed:%s Failed:%s\n", $count, $passed, $failed);
-			
+
 			if (count($failed_test) > 0)
 			{
 				$r = $r1 . "\x1b[31m" . $r2 . "\x1b[0m" . sprintf("Failed Test: \n %s \n", implode("\n ", $failed_test));
@@ -428,7 +428,3 @@ function is_false($test)
 {
 	return (is_bool($test) AND $test === FALSE) ? TRUE : FALSE;
 }
-
-
-/* End of file Unit_test.php */
-/* Location: ./application/third_party/CIUnit/libraries/Unit_test.php */

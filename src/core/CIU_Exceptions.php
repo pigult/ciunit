@@ -1,4 +1,4 @@
-<?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
+<?php
 /**
  * CodeIgniter
  *
@@ -24,8 +24,8 @@
  * @author		ExpressionEngine Dev Team
  * @link		http://codeigniter.com/user_guide/libraries/exceptions.html
  */
-class CIU_Exceptions extends Pigu_Exceptions {
-
+class CIU_Exceptions extends Pigu_Exceptions
+{
 	/**
 	 * Exception Logger
 	 *

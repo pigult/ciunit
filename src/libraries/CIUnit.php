@@ -41,7 +41,7 @@ class CIUnit {
 
 	public static $spyc;
 	public static $fixture;
-	
+
 	/**
 	 * If this class is suppose to be a Singleton shouldn't the constructor be private?
 	 * Correct me if I am wrong but this doesn't prevent multiple instances of this class.
@@ -69,16 +69,16 @@ class CIUnit {
 			viewvars();
 			return self::$controller;
 		}
-		
+
 		// the current controller must be archieved before littered
 		$loader =& load_class('Loader', 'core');
 
 		// reset all loaded data
 		$loader->reset();
-		
+
 		//echo 'Var Dump of self::$controllers -- ';
 		//var_dump(self::$controllers);
-		
+
 		/*
 		=========================================================
 		I don't understand this section of code.
@@ -94,7 +94,7 @@ class CIUnit {
 			//'components' => $loader->_ci_components,
 			//'classes' => $loader->_ci_classes
 		}
-		
+
 		===================================================
 		I don't understand why this code is clearing out
 		all the loaded components such as autoloaded models
@@ -108,14 +108,14 @@ class CIUnit {
 		//reset saved queries
 		self::$controller->db->queries = array();
 		*/
-		
+
 		//clean output / viewvars as well;
 		if (isset(self::$controller->output))
 		{
 			output();
 			viewvars();
 		}
-		
+
 		//the requested controller was loaded before?
 		if (isset(self::$controllers[$controller_name]))
 		{
@@ -143,7 +143,7 @@ class CIUnit {
 					include_once(APPPATH . 'controllers/' . $controller . EXT);
 				}
 			}
-			
+
 			self::$current = $controller_name;
 			self::$controllers[$controller_name] = array(
 														'address' => new $controller_name(),
@@ -151,12 +151,12 @@ class CIUnit {
 													);
 			self::$controller =& self::$controllers[$controller_name]['address'];
 		}
-		
+
 //		var_dump(self::$controllers); die();
-		
-		
+
+
 //		var_dump(self::$controller); die();
-		
+
 		//CI_Base::$instance = &self::$controller; //so get_instance() provides the correct controller
 		return self::$controller;
 	}
@@ -251,6 +251,3 @@ function viewvars()
 	}
 	return array();
 }
-
-/* End of file CIUnit.php */
-/* Location: ./application/third_party/CIUnit/libraries/CIUnit.php */

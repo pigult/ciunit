@@ -1,8 +1,8 @@
-<?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
+<?php
 
 /*
 * CodeIgniter source modified for CIUnit
-* 
+*
 * If you use MY_Session, change the paraent class.
 */
 
@@ -77,6 +77,3 @@ class CIU_Session extends CI_Session {
 		$this->CI->output->set_cookie($array);
 	}
 }
-
-/* End of file CIU_Session.php */
-/* Location: ./application/third_party/CIUnit/libraries/CIU_Session.php */
