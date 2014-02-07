@@ -28,7 +28,7 @@ class Fixture {
 	function load($table, $fixt)
 	{
 		$this->_assign_db();
-		
+
 		// $fixt is supposed to be an associative array
 		// E.g. outputted by spyc from reading a YAML file
 		$this->CI->db->simple_query('truncate table ' . $table . ';');
@@ -52,20 +52,23 @@ class Fixture {
 		log_message('debug',
 			"Data fixture for db table '$table' loaded - $nbr_of_rows rows");
 	}
-	
+
 	public function unload($table)
 	{
 		$this->_assign_db();
-		
+
+		if (!empty($table))
+		{
 		$Q = $this->CI->db->simple_query('truncate table ' . $table . ';');
-		
+
 		if (!$Q) {
 			echo $this->CI->db->call_function('error', $this->CI->db->conn_id);
 			echo "\n";
 			echo "Failed to truncate the table ".$table."\n\n";
 		}
 	}
-	
+	}
+
 
 	private function _assign_db()
 	{
@@ -73,7 +76,7 @@ class Fixture {
 			 ! isset($this->CI->db->database) )
 		{
 			$this->CI =& get_instance();
-			$this->CI->load->database();
+			$this->CI->load->database('ciunit');
 		}
 
 		//security measure 2: only load if used database ends on '_test'
@@ -87,6 +90,3 @@ class Fixture {
 	}
 
 }
-
-/* End of file Fixture.php */
-/* Location: ./application/third_party/CIUnit/libraries/Fixture.php */

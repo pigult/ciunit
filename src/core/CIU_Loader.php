@@ -13,7 +13,7 @@
 * If you use MY_Loader, change the paraent class.
 */
 
-class CIU_Loader extends CI_Loader {
+class CIU_Loader extends Pigu_Loader {
 
 	/**
 	 * Load class
@@ -82,12 +82,12 @@ class CIU_Loader extends CI_Loader {
 				}
 
 				include_once($baseclass);
-				
+
 				if (file_exists($subclass))
 				{
 					include_once($subclass);
 				}
-				
+
 				include_once($ciu_subclass);
 				$this->_ci_loaded_files[] = $ciu_subclass;
 
@@ -214,24 +214,34 @@ class CIU_Loader extends CI_Loader {
 					// We test for both uppercase and lowercase, for servers that
 					// are case-sensitive with regard to file names. Check for environment
 					// first, global next
-					if (defined('ENVIRONMENT') AND file_exists($path .'config/'.ENVIRONMENT.'/'.strtolower($class).'.php'))
+					if (defined('ENVIRONMENT') AND defined('APP_NAME') AND file_exists($path .'config/'.APP_NAME.'/'.ENVIRONMENT.'/'.strtolower($class).'.php'))
 					{
-						include($path .'config/'.ENVIRONMENT.'/'.strtolower($class).'.php');
+						include_once($path .'config/'.APP_NAME.'/'.ENVIRONMENT.'/'.strtolower($class).'.php');
 						break;
 					}
-					elseif (defined('ENVIRONMENT') AND file_exists($path .'config/'.ENVIRONMENT.'/'.ucfirst(strtolower($class)).'.php'))
+					elseif (defined('ENVIRONMENT') AND defined('APP_NAME') AND file_exists($path .'config/'.APP_NAME.'/'.ENVIRONMENT.'/'.ucfirst(strtolower($class)).'.php'))
 					{
-						include($path .'config/'.ENVIRONMENT.'/'.ucfirst(strtolower($class)).'.php');
+						include_once($path .'config/'.APP_NAME.'/'.ENVIRONMENT.'/'.ucfirst(strtolower($class)).'.php');
+						break;
+					}
+					elseif (defined('APP_NAME') AND file_exists($path .'config/'.APP_NAME.'/'.strtolower($class).'.php'))
+					{
+						include_once($path .'config/'.APP_NAME.'/'.strtolower($class).'.php');
+						break;
+					}
+					elseif (defined('APP_NAME') AND file_exists($path .'config/'.APP_NAME.'/'.ucfirst(strtolower($class)).'.php'))
+					{
+						include_once($path .'config/'.APP_NAME.'/'.ucfirst(strtolower($class)).'.php');
 						break;
 					}
 					elseif (file_exists($path .'config/'.strtolower($class).'.php'))
 					{
-						include($path .'config/'.strtolower($class).'.php');
+						include_once($path .'config/'.strtolower($class).'.php');
 						break;
 					}
 					elseif (file_exists($path .'config/'.ucfirst(strtolower($class)).'.php'))
 					{
-						include($path .'config/'.ucfirst(strtolower($class)).'.php');
+						include_once($path .'config/'.ucfirst(strtolower($class)).'.php');
 						break;
 					}
 				}
@@ -311,6 +321,91 @@ class CIU_Loader extends CI_Loader {
 	// --------------------------------------------------------------------
 
 	/**
+	 * Autoloader
+	 *
+	 * The config/autoload.php file contains an array that permits sub-systems,
+	 * libraries, and helpers to be loaded automatically.
+	 *
+	 * This function is public, as it's used in the CI_Controller class.
+	 * However, there is no reason you should ever needs to use it.
+	 *
+	 * @param	array
+	 * @return	void
+	 */
+	public function ci_autoloader()
+	{
+		require_once(getConfigFile('autoload'));
+
+		if ( ! isset($autoload))
+		{
+			return FALSE;
+		}
+
+		// Autoload packages
+		if (isset($autoload['packages']))
+		{
+			foreach ($autoload['packages'] as $package_path)
+			{
+				$this->add_package_path($package_path);
+			}
+		}
+
+		// Load any custom config file
+		if (count($autoload['config']) > 0)
+		{
+			$CI =& get_instance();
+			foreach ($autoload['config'] as $key => $val)
+			{
+				$CI->config->load($val);
+			}
+		}
+
+		// HACK. Skip memory auto loading?
+
+
+		// Autoload helpers and languages
+		foreach (array('helper', 'language') as $type)
+		{
+			if (isset($autoload[$type]) AND count($autoload[$type]) > 0)
+			{
+				$this->$type($autoload[$type]);
+			}
+		}
+
+		// A little tweak to remain backward compatible
+		// The $autoload['core'] item was deprecated
+		if ( ! isset($autoload['libraries']) AND isset($autoload['core']))
+		{
+			$autoload['libraries'] = $autoload['core'];
+		}
+
+		// Load libraries
+		if (isset($autoload['libraries']) AND count($autoload['libraries']) > 0)
+		{
+			// Load the database driver.
+			if (in_array('database', $autoload['libraries']))
+			{
+				$this->database('ciunit');
+				$autoload['libraries'] = array_diff($autoload['libraries'], array('database'));
+			}
+
+			// Load all other libraries
+			foreach ($autoload['libraries'] as $item)
+			{
+				$this->library($item);
+			}
+		}
+
+		// Autoload models
+		if (isset($autoload['model']))
+		{
+			$this->model($autoload['model']);
+		}
+	}
+
+	// --------------------------------------------------------------------
+
+	/**
 	* Load View
 	*
 	* This function is used to load a "view" file.  It has three parameters:
@@ -358,12 +453,12 @@ class CIU_Loader extends CI_Loader {
 			}
 
 			$ciu_helper = CIUPATH.'helpers/'.config_item('ciu_subclass_prefix').$helper.'.php';
-			
+
 			if (file_exists($ciu_helper))
 			{
 				include_once($ciu_helper);
 			}
-			
+
 			$ext_helper = APPPATH.'helpers/'.config_item('subclass_prefix').$helper.'.php';
 
 			// Is this a helper extension request?
@@ -432,6 +527,3 @@ class CIU_Loader extends CI_Loader {
 		$this->_ci_helpers = array();
 	}
 }
-
-/* End of file CIU_Loader.php */
-/* Location: ./application/third_party/CIUnit/core/CIU_Loader.php */

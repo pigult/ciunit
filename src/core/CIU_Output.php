@@ -9,11 +9,11 @@
 
 /*
 * CodeIgniter source modified for fooStack / CIUnit
-* 
+*
 * If you use MY_Output, change the paraent class.
 */
 
-class CIU_Output extends CI_Output {
+class CIU_Output extends Pigu_Output {
 
 	function __construct()
 	{
@@ -285,6 +285,3 @@ class CIU_Output extends CI_Output {
 
 	// --------------------------------------------------------------------
 }
-
-/* End of file CIU_Output.php */
-/* Location: ./application/third_party/CIUnit/core/CIU_Output.php */

@@ -24,8 +24,8 @@
  * @author		ExpressionEngine Dev Team
  * @link		http://codeigniter.com/user_guide/libraries/exceptions.html
  */
-class CIU_Exceptions extends CI_Exceptions {
-    
+class CIU_Exceptions extends Pigu_Exceptions {
+
 	/**
 	 * Exception Logger
 	 *
@@ -92,7 +92,7 @@ class CIU_Exceptions extends CI_Exceptions {
 		{
 			ob_end_flush();
 		}
-		
+
 		echo "[CIUnit] Error: $status_code Message: $message\n";
 		return;
 	}
@@ -126,12 +126,9 @@ class CIU_Exceptions extends CI_Exceptions {
 		{
 			ob_end_flush();
 		}
-		
+
 		echo "[CIUnit] PHP Error: $severity - $message File Path: $filepath (line: $line)\n";
 	}
 
 
 }
-
-/* End of file CIU_Exceptions.php */
-/* Location: ./application/third_party/CIUnit/core/CIU_Exceptions.php */

@@ -119,70 +119,76 @@ if ( ! function_exists('load_class'))
 }
 
 // --------------------------------------------------------------------
-
-/**
-* Loads the main config.php file
-*
-* This function lets us grab the config file even if the Config class
-* hasn't been instantiated yet
-*
-* @access	private
-* @return	array
-*/
-if ( ! function_exists('get_config'))
+function &get_config($replace = array())
 {
-	function &get_config($replace = array())
+	static $_config;
+
+	if (isset($_config))
 	{
-		static $_config;
+		return $_config[0];
+	}
 
-		if (isset($_config))
+	$file_path = getConfigFile('config');
+
+	require_once($file_path);
+
+	// Fetch the CIU config file
+	if ( ! file_exists(CIUPATH .'config/config.php'))
+	{
+		exit('The configuration file does not exist.');
+	}
+
+	require(CIUPATH.'config/config.php');
+
+	// Does the $config array exist in the file?
+	if ( ! isset($config) OR ! is_array($config))
+	{
+		exit('Your config file does not appear to be formatted correctly.');
+	}
+
+	// Are any values being dynamically replaced?
+	if (count($replace) > 0)
+	{
+		foreach ($replace as $key => $val)
 		{
-			return $_config[0];
-		}
-
-		// Is the config file in the environment folder?
-		if ( ! defined('ENVIRONMENT') OR ! file_exists($file_path = APPPATH.'config/'.ENVIRONMENT.'/config.php'))
-		{
-			$file_path = APPPATH.'config/config.php';
-		}
-
-		// Fetch the config file
-		if ( ! file_exists($file_path))
-		{
-			exit('The configuration file does not exist.');
-		}
-
-		require($file_path);
-
-		// Fetch the CIU config file
-		if ( ! file_exists(CIUPATH .'config/config.php'))
-		{
-			exit('The configuration file does not exist.');
-		}
-
-		require(CIUPATH.'config/config.php');
-
-		// Does the $config array exist in the file?
-		if ( ! isset($config) OR ! is_array($config))
-		{
-			exit('Your config file does not appear to be formatted correctly.');
-		}
-
-		// Are any values being dynamically replaced?
-		if (count($replace) > 0)
-		{
-			foreach ($replace as $key => $val)
+			if (isset($config[$key]))
 			{
-				if (isset($config[$key]))
-				{
-					$config[$key] = $val;
-				}
+				$config[$key] = $val;
 			}
 		}
-
-		return $_config[0] =& $config;
 	}
+
+	return $_config[0] =& $config;
 }
 
-/* End of file Common.php */
-/* Location: ./application/third_party/CIUnit/core/Common.php */
+/**
+ * Suranda kelią iki config failo pagal ENV var'us.
+ *
+ * @param $file
+ *
+ * @return string
+ */
+function getConfigFile($file)
+{
+	if (defined('ENVIRONMENT') && defined('APP_NAME'))
+	{
+		if (file_exists(APPPATH . 'config/' . APP_NAME . '/' . ENVIRONMENT . '/' . $file . '.php'))
+		{
+			$filePath = APPPATH . 'config/' . APP_NAME . '/' . ENVIRONMENT . '/' . $file . '.php';
+		}
+		elseif (file_exists(APPPATH . 'config/' . APP_NAME . '/' . $file . '.php'))
+		{
+			$filePath = APPPATH . 'config/' . APP_NAME . '/' . $file . '.php';
+		}
+		else
+		{
+			$filePath = APPPATH . 'config/' . $file . '.php';
+		}
+	}
+	else
+	{
+		$filePath = APPPATH . 'config/' . $file . '.php';
+	}
+
+	return $filePath;
+}

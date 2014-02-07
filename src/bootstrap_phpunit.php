@@ -3,13 +3,6 @@
 die('This is only an example. Please create your own bootstrap based on this.');
 
 /*
-echo '<pre>';
-var_dump($GLOBALS);
-echo '</pre>';
-exit;
-*/
-
-/*
  * ------------------------------------------------------
  *  CIUnit Version
  * ------------------------------------------------------
@@ -34,7 +27,7 @@ exit;
  * NOTE: If you change these, also change the error_reporting() code below
  *
  */
-	define('ENVIRONMENT', 'testing');
+	define('ENVIRONMENT', 'ciunit');
 /*
  *---------------------------------------------------------------
  * ERROR REPORTING
@@ -275,6 +268,3 @@ require_once(CIUPATH . 'libraries/Fixture.php');
 
 $CI->fixture = new Fixture();
 CIUnit::$fixture =& $CI->fixture;
-
-/* End of file bootstrap_phpunit.php */
-/* Location: ./application/third_party/CIUnit/bootstrap_phpunit.php */

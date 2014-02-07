@@ -27,19 +27,17 @@
  * @link		http://codeigniter.com/user_guide/
  */
 
-/**
- * CodeIgniter Version
- *
- * @var string
- *
+/*
+ * ------------------------------------------------------
+ *  Define the CodeIgniter Version
+ * ------------------------------------------------------
  */
-	define('CI_VERSION', '2.1.0');
+	define('CI_VERSION', '2.1.0-pigu');
 
-/**
- * CodeIgniter Branch (Core = TRUE, Reactor = FALSE)
- *
- * @var boolean
- *
+/*
+ * ------------------------------------------------------
+ *  Define the CodeIgniter Branch (Core = TRUE, Reactor = FALSE)
+ * ------------------------------------------------------
  */
 	define('CI_CORE', FALSE);
 
@@ -56,14 +54,7 @@
  *  Load the framework constants
  * ------------------------------------------------------
  */
-	if (defined('ENVIRONMENT') AND file_exists(APPPATH.'config/'.ENVIRONMENT.'/constants.php'))
-	{
-		require(APPPATH.'config/'.ENVIRONMENT.'/constants.php');
-	}
-	else
-	{
-		require(APPPATH.'config/constants.php');
-	}
+	require_once(getConfigFile('constants'));
 
 /*
  * ------------------------------------------------------
@@ -100,12 +91,16 @@
 
 /*
  * ------------------------------------------------------
- *  Set a liberal script execution time limit
+ *  Instantiate the config class
  * ------------------------------------------------------
  */
-	if (function_exists("set_time_limit") == TRUE AND @ini_get("safe_mode") == 0)
+	$CFG =& load_class('Config', 'core', 'Pigu_');
+	$GLOBALS['CFG'] =& $CFG;
+
+	// Do we have any manually set config items in the index.php file?
+	if (isset($assign_to_config))
 	{
-		@set_time_limit(300);
+		$CFG->_assign_to_config($assign_to_config);
 	}
 
 /*
@@ -121,10 +116,20 @@
 
 /*
  * ------------------------------------------------------
+ *  Load Symfony2 Event Dispatcher
+ * ------------------------------------------------------
+ */
+	/* @var $DSP Pigu_EventDispatcher */
+	$DSP =& load_class('EventDispatcher', 'core', 'Pigu_');
+
+	$DSP->registerListeners($CFG);
+
+/*
+ * ------------------------------------------------------
  *  Instantiate the hooks class
  * ------------------------------------------------------
  */
-	$EXT =& load_class('Hooks', 'core');
+	$EXT =& load_class('Hooks', 'core', 'Pigu_');
 	$GLOBALS['EXT'] =& $EXT;
 
 /*
@@ -133,20 +138,6 @@
  * ------------------------------------------------------
  */
 	$EXT->_call_hook('pre_system');
-
-/*
- * ------------------------------------------------------
- *  Instantiate the config class
- * ------------------------------------------------------
- */
-	$CFG =& load_class('Config', 'core');
-	$GLOBALS['CFG'] =& $CFG;
-
-	// Do we have any manually set config items in the index.php file?
-	if (isset($assign_to_config))
-	{
-		$CFG->_assign_to_config($assign_to_config);
-	}
 
 /*
  * ------------------------------------------------------
@@ -176,7 +167,7 @@
  *  Instantiate the routing class and set the routing
  * ------------------------------------------------------
  */
-	$RTR =& load_class('Router', 'core');
+	$RTR =& load_class('Router', 'core', 'Pigu_');
 	$GLOBALS['RTR'] =& $RTR;
 	//$RTR->_set_routing();
 
@@ -191,7 +182,7 @@
  *  Instantiate the output class
  * ------------------------------------------------------
  */
-	$OUT =& load_class('Output', 'core');
+	$OUT =& load_class('Output', 'core', 'Pigu_');
 	$GLOBALS['OUT'] =& $OUT;
 
 /*
@@ -285,25 +276,7 @@ if (defined('CIUnit_Version') === FALSE)
 		OR in_array(strtolower($method), array_map('strtolower', get_class_methods('CI_Controller')))
 		)
 	{
-		if ( ! empty($RTR->routes['404_override']))
-		{
-			$x = explode('/', $RTR->routes['404_override']);
-			$class = $x[0];
-			$method = (isset($x[1]) ? $x[1] : 'index');
-			if ( ! class_exists($class))
-			{
-				if ( ! file_exists(APPPATH.'controllers/'.$class.'.php'))
-				{
-					show_404("{$class}/{$method}");
-				}
-
-				include_once(APPPATH.'controllers/'.$class.'.php');
-			}
-		}
-		else
-		{
-			show_404("{$class}/{$method}");
-		}
+		show_404("{$class}/{$method}");
 	}
 
 /*
@@ -413,7 +386,3 @@ if (defined('CIUnit_Version') === FALSE)
 		$CI->db->close();
 	}
 }
-
-
-/* End of file CodeIgniter.php */
-/* Location: ./application/third_party/CIUnit/core/CodeIgniter.php */

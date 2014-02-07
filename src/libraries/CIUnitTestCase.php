@@ -14,10 +14,10 @@
 class CIUnit_TestCase extends PHPUnit_Framework_TestCase
 {
 	// ------------------------------------------------------------------------
-	
+
 	/**
 	 * An associative array of table names. The order of the fixtures
-	 * determines the loading and unloading sequence of the fixtures. This is 
+	 * determines the loading and unloading sequence of the fixtures. This is
 	 * to help account for foreign key restraints in databases.
 	 *
 	 * For example:
@@ -39,33 +39,33 @@ class CIUnit_TestCase extends PHPUnit_Framework_TestCase
 	 * @var array
 	 */
 	protected $tables = array();
-	
+
 	// ------------------------------------------------------------------------
-	
+
 	/**
 	 * The CodeIgniter Framework Instance
 	 *
 	 * @var object
 	 */
 	public $CI;
-	
+
 	// ------------------------------------------------------------------------
-	
+
 	/**
 	 * Constructor
 	 *
-	 * @param	string	$name 
-	 * @param	array	$data 
-	 * @param	string	$dataName 
+	 * @param	string	$name
+	 * @param	array	$data
+	 * @param	string	$dataName
 	 */
 	public function __construct($name = NULL, array $data = array(), $dataName = '')
 	{
 		parent::__construct($name, $data, $dataName);
 		$this->CI =& get_instance();
-		
+
 		log_message('debug', get_class($this).' CIUnit_TestCase initialized');
 	}
-	
+
 	/**
 	 * Set Up
 	 *
@@ -83,12 +83,12 @@ class CIUnit_TestCase extends PHPUnit_Framework_TestCase
 			$this->dbfixt($this->tables);
 		}
 	}
-	
+
 	/**
 	 * Tear Down
-	 * 
+	 *
 	 * This method will run after every test.
-	 * 
+	 *
 	 * @return void
 	 *
 	 * @author Eric Jones
@@ -101,7 +101,7 @@ class CIUnit_TestCase extends PHPUnit_Framework_TestCase
 			$this->dbfixt_unload($this->tables);
 		}
 	}
-	
+
 	/**
 	 * loads a database fixture
 	 * for each given fixture, we look up the yaml file and insert that into the corresponding table
@@ -122,7 +122,7 @@ class CIUnit_TestCase extends PHPUnit_Framework_TestCase
 			$table_fixtures = func_get_args();
 			$this->load_fixt($table_fixtures);
 		}
-		
+
 		/**
 		 * This is to allow the Unit Tester to specifiy different fixutre files for
 		 * a given table. An example would be the testing of two different senarios
@@ -134,21 +134,21 @@ class CIUnit_TestCase extends PHPUnit_Framework_TestCase
 		{
 			$fixt_name = $fixt . '_fixt';
 			$table = is_int($table) ? $fixt : $table;
-			
+
 			if (!empty($this->$fixt_name))
 			{
 				CIUnit::$fixture->load($table, $this->$fixt_name);
 			}
 			else
 			{
-				die("The fixture {$fixt_name} failed to load properly\n");
+				//die("The fixture {$fixt_name} failed to load properly\n");
 			}
-			
+
 		}
-		
+
 		log_message('debug', 'Table fixtures "' . join('", "', $table_fixtures) . '" loaded');
 	}
-	
+
 	/**
 	 * DBFixt Unload
 	 *
@@ -180,7 +180,7 @@ class CIUnit_TestCase extends PHPUnit_Framework_TestCase
 			// of the database load. Right??
 			$table_fixtures = array_reverse($table_fixtures, true);
 		}
-	
+
 		// Iterate over the array unloading the tables
 		foreach ($table_fixtures as $table => $fixture)
 		{
@@ -206,7 +206,7 @@ class CIUnit_TestCase extends PHPUnit_Framework_TestCase
 		foreach ( $fixts as $fixt )
 		{
 			$fixt_name = $fixt . '_fixt';
-			
+
 			if (file_exists(TESTSPATH . 'fixtures/' . $fixt . '_fixt.yml')) {
 				$this->$fixt_name = CIUnit::$spyc->loadFile(TESTSPATH . 'fixtures/' . $fixt . '_fixt.yml');
 			}
@@ -217,6 +217,3 @@ class CIUnit_TestCase extends PHPUnit_Framework_TestCase
 		}
 	}
 }
-
-/* End of file CIUnitTestCase.php */
-/* Location: ./application/third_party/CIUnit/libraries/CIUnitTestCase.php */
