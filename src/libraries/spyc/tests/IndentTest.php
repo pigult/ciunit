@@ -1,6 +1,6 @@
 <?php
 
-require_once ("../spyc.php");
+require_once("../spyc.php");
 
 class IndentTest extends PHPUnit_Framework_TestCase {
 
