@@ -1,7 +1,7 @@
 <?php
 
 require_once 'PHPUnit/Framework.php';
-require_once ("../spyc.php");
+require_once("../spyc.php");
 
 class ParseTest extends PHPUnit_Framework_TestCase {
 
