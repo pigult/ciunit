@@ -1,0 +1,15 @@
+{
+	"name": "pigult/ciunit",
+	"description": "CIUnit Foostack",
+	"minimum-stability": "dev",
+	"license": "",
+	"authors": [
+		{
+			"name": "Donatas Aleksandravičius",
+			"email": "donatas.aleksandravicius@pigu.lt"
+		}
+	],
+	"require": {
+		"phpunit/phpunit": "3.7.*"
+	}
+}
