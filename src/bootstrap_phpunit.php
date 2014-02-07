@@ -229,11 +229,10 @@ define('TESTSPATH', realpath($tests_folder) . '/');
  *
  */
 
+require_once '../vendor/autoload.php';
+
 // Load the CIUnit CodeIgniter Core
 require_once CIUPATH . 'core/CodeIgniter.php';
-
-// Autoload the PHPUnit Framework
-require_once('PHPUnit/Autoload.php');
 
 // Load the CIUnit Framework
 require_once CIUPATH . 'libraries/CIUnit.php';
@@ -241,8 +240,6 @@ require_once CIUPATH . 'libraries/CIUnit.php';
 //=== and off we go ===
 $CI =& set_controller('CIU_Controller', CIUPATH . 'core/');
 $CI->load->add_package_path(CIUPATH);
-
-require_once(CIUPATH . 'libraries/spyc/spyc.php');
 
 CIUnit::$spyc = new Spyc();
 
