@@ -13,8 +13,6 @@
  */
 class CIUnit_TestCase extends PHPUnit_Framework_TestCase
 {
-	// ------------------------------------------------------------------------
-
 	/**
 	 * An associative array of table names. The order of the fixtures
 	 * determines the loading and unloading sequence of the fixtures. This is
@@ -22,25 +20,23 @@ class CIUnit_TestCase extends PHPUnit_Framework_TestCase
 	 *
 	 * For example:
 	 * $tables = array(
-	 *				'group' => 'group',
-	 *				'user' => 'user',
-	 *				'user_group' => 'user_group'
-	 *				'table_a' => 'table_a_01'
-	 * 			);
+	 *                'group' => 'group',
+	 *                'user' => 'user',
+	 *                'user_group' => 'user_group'
+	 *                'table_a' => 'table_a_01'
+	 *            );
 	 *
 	 * Note: To test different data scenarios for a single database, create
 	 * different fixtures.
 	 *
 	 * For example:
 	 * $tables = array(
-	 *				'table_a' => 'table_a_02'
-	 *			);
+	 *                'table_a' => 'table_a_02'
+	 *            );
 	 *
 	 * @var array
 	 */
 	protected $tables = array();
-
-	// ------------------------------------------------------------------------
 
 	/**
 	 * The CodeIgniter Framework Instance
@@ -49,21 +45,19 @@ class CIUnit_TestCase extends PHPUnit_Framework_TestCase
 	 */
 	public $CI;
 
-	// ------------------------------------------------------------------------
-
 	/**
 	 * Constructor
 	 *
-	 * @param	string	$name
-	 * @param	array	$data
-	 * @param	string	$dataName
+	 * @param    string $name
+	 * @param    array  $data
+	 * @param    string $dataName
 	 */
-	public function __construct($name = NULL, array $data = array(), $dataName = '')
+	public function __construct($name = null, array $data = array(), $dataName = '')
 	{
 		parent::__construct($name, $data, $dataName);
 		$this->CI =& get_instance();
 
-		log_message('debug', get_class($this).' CIUnit_TestCase initialized');
+		log_message('debug', get_class($this) . ' CIUnit_TestCase initialized');
 	}
 
 	/**
@@ -78,8 +72,7 @@ class CIUnit_TestCase extends PHPUnit_Framework_TestCase
 	protected function setUp()
 	{
 		// Only run if the $tables attribute is set.
-		if ( ! empty($this->tables))
-		{
+		if (!empty($this->tables)) {
 			$this->dbfixt($this->tables);
 		}
 	}
@@ -96,8 +89,7 @@ class CIUnit_TestCase extends PHPUnit_Framework_TestCase
 	protected function tearDown()
 	{
 		// Only run if the $tables attribute is set.
-		if ( ! empty($this->tables))
-		{
+		if (!empty($this->tables)) {
 			$this->dbfixt_unload($this->tables);
 		}
 	}
@@ -113,12 +105,9 @@ class CIUnit_TestCase extends PHPUnit_Framework_TestCase
 	 */
 	protected function dbfixt($table_fixtures)
 	{
-		if (is_array($table_fixtures))
-		{
+		if (is_array($table_fixtures)) {
 			$this->load_fixt($table_fixtures);
-		}
-		else
-		{
+		} else {
 			$table_fixtures = func_get_args();
 			$this->load_fixt($table_fixtures);
 		}
@@ -130,20 +119,15 @@ class CIUnit_TestCase extends PHPUnit_Framework_TestCase
 		 *
 		 * @see CIUnitTestCase::tables
 		 */
-		foreach($table_fixtures as $table => $fixt )
-		{
+		foreach ($table_fixtures as $table => $fixt) {
 			$fixt_name = $fixt . '_fixt';
 			$table = is_int($table) ? $fixt : $table;
 
-			if (!empty($this->$fixt_name))
-			{
+			if (!empty($this->$fixt_name)) {
 				CIUnit::$fixture->load($table, $this->$fixt_name);
-			}
-			else
-			{
+			} else {
 				//die("The fixture {$fixt_name} failed to load properly\n");
 			}
-
 		}
 
 		log_message('debug', 'Table fixtures "' . join('", "', $table_fixtures) . '" loaded');
@@ -156,16 +140,16 @@ class CIUnit_TestCase extends PHPUnit_Framework_TestCase
 	 * truncate tables in random order. This method attempts to truncate the
 	 * tables by reversing the order of the $table attribute.
 	 *
-	 * @param	array	$table_fixtures	Typically this will be the class attribute $table.
-	 * @param	boolean	$reverse		Should the method reverse the $table_fixtures array
-	 * before the truncating the tables?
+	 * @param    array   $table_fixtures Typically this will be the class attribute $table.
+	 * @param    boolean $reverse        Should the method reverse the $table_fixtures array
+	 *                                   before the truncating the tables?
 	 *
 	 * @return void
 	 *
-	 * @see CIUnitTestCase::table
+	 * @see    CIUnitTestCase::table
 	 *
-	 * @uses CIUnit::fixture
-	 * @uses Fixture::unload()
+	 * @uses   CIUnit::fixture
+	 * @uses   Fixture::unload()
 	 *
 	 * @author Eric Jones <eric.web.email@gmail.com>
 	 */
@@ -173,8 +157,7 @@ class CIUnit_TestCase extends PHPUnit_Framework_TestCase
 	{
 		// Should we reverse the order of loading?
 		// Helps with truncating tables with foreign key dependencies.
-		if ($reverse)
-		{
+		if ($reverse) {
 			// Since the loading of tables took into account foreign key
 			// dependencies we should be able to just reverse the order
 			// of the database load. Right??
@@ -182,16 +165,15 @@ class CIUnit_TestCase extends PHPUnit_Framework_TestCase
 		}
 
 		// Iterate over the array unloading the tables
-		foreach ($table_fixtures as $table => $fixture)
-		{
+		foreach ($table_fixtures as $table => $fixture) {
 			CIUnit::$fixture->unload($table);
 			log_message('debug', 'Table fixture "' . $fixture . '" unloaded');
 		}
 	}
 
 	/**
-	* fixture wrapper, for arbitrary number of arguments
-	*/
+	 * fixture wrapper, for arbitrary number of arguments
+	 */
 	function fixt()
 	{
 		$fixts = func_get_args();
@@ -199,20 +181,17 @@ class CIUnit_TestCase extends PHPUnit_Framework_TestCase
 	}
 
 	/**
-	* loads a fixture from a yaml file
-	*/
+	 * loads a fixture from a yaml file
+	 */
 	protected function load_fixt($fixts)
 	{
-		foreach ( $fixts as $fixt )
-		{
+		foreach ($fixts as $fixt) {
 			$fixt_name = $fixt . '_fixt';
 
 			if (file_exists(TESTSPATH . 'fixtures/' . $fixt . '_fixt.yml')) {
 				$this->$fixt_name = CIUnit::$spyc->loadFile(TESTSPATH . 'fixtures/' . $fixt . '_fixt.yml');
-			}
-			else
-			{
-				die('The file '. TESTSPATH . 'fixtures/' . $fixt . '_fixt.yml doesn\'t exist.');
+			} else {
+				die('The file ' . TESTSPATH . 'fixtures/' . $fixt . '_fixt.yml doesn\'t exist.');
 			}
 		}
 	}

@@ -173,8 +173,6 @@ class CIU_Loader extends Pigu_Loader
 		}
 	}
 
-	// --------------------------------------------------------------------
-
 	/**
 	 * Instantiates a class
 	 *
@@ -200,25 +198,25 @@ class CIU_Loader extends Pigu_Loader
 					// first, global next
 					if (defined('ENVIRONMENT') AND
 						defined('APP_NAME') AND file_exists($path . 'config/' . APP_NAME . '/' . ENVIRONMENT . '/'
-						. strtolower($class) . '.php')
+							. strtolower($class) . '.php')
 					) {
 						include_once($path . 'config/' . APP_NAME . '/' . ENVIRONMENT . '/' . strtolower($class)
 							. '.php');
 						break;
 					} elseif (defined('ENVIRONMENT') AND
 						defined('APP_NAME') AND file_exists($path . 'config/' . APP_NAME . '/' . ENVIRONMENT . '/'
-						. ucfirst(strtolower($class)) . '.php')
+							. ucfirst(strtolower($class)) . '.php')
 					) {
 						include_once($path . 'config/' . APP_NAME . '/' . ENVIRONMENT . '/'
 							. ucfirst(strtolower($class)) . '.php');
 						break;
 					} elseif (defined('APP_NAME') AND file_exists($path . 'config/' . APP_NAME . '/'
-						. strtolower($class) . '.php')
+							. strtolower($class) . '.php')
 					) {
 						include_once($path . 'config/' . APP_NAME . '/' . strtolower($class) . '.php');
 						break;
 					} elseif (defined('APP_NAME') AND file_exists($path . 'config/' . APP_NAME . '/'
-						. ucfirst(strtolower($class)) . '.php')
+							. ucfirst(strtolower($class)) . '.php')
 					) {
 						include_once($path . 'config/' . APP_NAME . '/' . ucfirst(strtolower($class)) . '.php');
 						break;
@@ -281,8 +279,6 @@ class CIU_Loader extends Pigu_Loader
 			}
 		}
 	}
-
-	// --------------------------------------------------------------------
 
 	/**
 	 * Autoloader
@@ -355,8 +351,6 @@ class CIU_Loader extends Pigu_Loader
 		}
 	}
 
-	// --------------------------------------------------------------------
-
 	/**
 	 * Load View
 	 *
@@ -386,8 +380,6 @@ class CIU_Loader extends Pigu_Loader
 		$CI =& get_instance();
 		$CI->output->add_output($output);
 	}
-
-	// --------------------------------------------------------------------
 
 	/**
 	 * Load Helper
@@ -447,8 +439,6 @@ class CIU_Loader extends Pigu_Loader
 		}
 	}
 
-	// --------------------------------------------------------------------
-
 	/*
 	* Can load a view file from an absolute path and
 	* relative to the CodeIgniter index.php file
@@ -457,11 +447,9 @@ class CIU_Loader extends Pigu_Loader
 	function viewfile($viewfile, $vars = array(), $return = false)
 	{
 		return $this->_ci_load(array(
-				'_ci_path' => $viewfile, '_ci_vars' => $this->_ci_object_to_array($vars), '_ci_return' => $return
-			));
+			'_ci_path' => $viewfile, '_ci_vars' => $this->_ci_object_to_array($vars), '_ci_return' => $return
+		));
 	}
-
-	// --------------------------------------------------------------------
 
 	function reset()
 	{

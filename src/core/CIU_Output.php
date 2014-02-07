@@ -70,8 +70,6 @@ class CIU_Output extends Pigu_Output
 		log_message('debug', 'no cache headers set in output class');
 	}
 
-	// --------------------------------------------------------------------
-
 	/**
 	 * sets headers if not already set
 	 */
@@ -152,14 +150,10 @@ class CIU_Output extends Pigu_Output
 			$CI =& get_instance();
 		}
 
-		// --------------------------------------------------------------------
-
 		// Set the output data
 		if ($output == '') {
 			$output =& $this->final_output;
 		}
-
-		// --------------------------------------------------------------------
 
 		// Do we need to write a cache file? Only if the controller does not have its
 		// own _output() method and we are not dealing with a cache file, which we
@@ -167,8 +161,6 @@ class CIU_Output extends Pigu_Output
 		if ($this->cache_expiration > 0 && isset($CI) && !method_exists($CI, '_output')) {
 			$this->_write_cache($output);
 		}
-
-		// --------------------------------------------------------------------
 
 		// Parse out the elapsed time and memory usage,
 		// then swap the pseudo-variables with the data
@@ -182,8 +174,6 @@ class CIU_Output extends Pigu_Output
 			$output = str_replace('{memory_usage}', $memory, $output);
 		}
 
-		// --------------------------------------------------------------------
-
 		// Is compression requested?
 		if ($CFG->item('compress_output') === true && $this->_zlib_oc == false) {
 			if (extension_loaded('zlib')) {
@@ -195,8 +185,6 @@ class CIU_Output extends Pigu_Output
 			}
 		}
 
-		// --------------------------------------------------------------------
-
 		// Are there any server headers to send?
 		if (count($this->headers) > 0) {
 			foreach ($this->headers as $header) {
@@ -205,8 +193,6 @@ class CIU_Output extends Pigu_Output
 			}
 		}
 
-		// --------------------------------------------------------------------
-
 		// Are there any cookies to set?
 		if (count($this->cookies) > 0) {
 			foreach ($this->cookies as $cookie) {
@@ -214,8 +200,6 @@ class CIU_Output extends Pigu_Output
 				log_message('debug', "cookie '" . join(', ', $cookie) . "' set.");
 			}
 		}
-
-		// --------------------------------------------------------------------
 
 		// If not we know we are dealing with a cache file so we'll
 		// simply echo out the data and exit.
@@ -226,8 +210,6 @@ class CIU_Output extends Pigu_Output
 
 			return true;
 		}
-
-		// --------------------------------------------------------------------
 
 		// Do we need to generate profile data?
 		// If so, load the Profile class and run it.
@@ -248,8 +230,6 @@ class CIU_Output extends Pigu_Output
 				$output .= $CI->profiler->run();
 			}
 		}
-
-		// --------------------------------------------------------------------
 
 		// Does the controller contain a function named _output()?
 		// If so send the output there. Otherwise, echo it.

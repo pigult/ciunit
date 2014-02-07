@@ -13,8 +13,6 @@
  * @filesource
  */
 
-// ------------------------------------------------------------------------
-
 /**
  * CodeIgniter URL Helpers
  *
@@ -24,8 +22,6 @@
  * @author         ExpressionEngine Dev Team
  * @link           http://codeigniter.com/user_guide/helpers/url_helper.html
  */
-
-// ------------------------------------------------------------------------
 
 /**
  * Header Redirect

@@ -13,8 +13,6 @@
  * @filesource
  */
 
-// ------------------------------------------------------------------------
-
 /**
  * Exceptions Class
  *
@@ -47,8 +45,6 @@ class CIU_Exceptions extends Pigu_Exceptions
 		log_message('error', 'Severity: ' . $severity . '  --> ' . $message . ' ' . $filepath . ' ' . $line, true);
 	}
 
-	// --------------------------------------------------------------------
-
 	/**
 	 * 404 Page Not Found Handler
 	 *
@@ -71,8 +67,6 @@ class CIU_Exceptions extends Pigu_Exceptions
 		echo $this->show_error($heading, $message, 'error_404', 404);
 		exit;
 	}
-
-	// --------------------------------------------------------------------
 
 	/**
 	 * General Error Page
@@ -101,8 +95,6 @@ class CIU_Exceptions extends Pigu_Exceptions
 
 		return;
 	}
-
-	// --------------------------------------------------------------------
 
 	/**
 	 * Native PHP error handler

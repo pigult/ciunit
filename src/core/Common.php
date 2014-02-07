@@ -18,8 +18,6 @@
  * @filesource
  */
 
-// ------------------------------------------------------------------------
-
 /**
  * Common Functions
  *
@@ -31,8 +29,6 @@
  * @author         ExpressionEngine Dev Team
  * @link           http://codeigniter.com/user_guide/
  */
-
-// ------------------------------------------------------------------------
 
 /**
  * Class registry
@@ -110,7 +106,6 @@ if (!function_exists('load_class')) {
 	}
 }
 
-// --------------------------------------------------------------------
 function &get_config($replace = array())
 {
 	static $_config;

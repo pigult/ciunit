@@ -6,74 +6,59 @@
 * If you use MY_Session, change the paraent class.
 */
 
-class CIU_Session extends CI_Session {
-
+class CIU_Session extends CI_Session
+{
 	/**
 	 * Destroy the current session
 	 *
-	 * @access	public
-	 * @return	void
+	 * @access    public
+	 * @return    void
 	 */
 	function sess_destroy()
 	{
 		// Kill the session DB row
-		if ($this->sess_use_database === TRUE AND isset($this->userdata['session_id']))
-		{
+		if ($this->sess_use_database === true AND isset($this->userdata['session_id'])) {
 			$this->CI->db->where('session_id', $this->userdata['session_id']);
 			$this->CI->db->delete($this->sess_table_name);
 		}
 
 		// Kill the cookie: modified for CIUnit
 		$array = array(
-					$this->sess_cookie_name,
-					addslashes(serialize(array())),
-					($this->now - 31500000),
-					$this->cookie_path,
-					$this->cookie_domain,
-					0
-				);
+			$this->sess_cookie_name, addslashes(serialize(array())), ($this->now - 31500000), $this->cookie_path,
+			$this->cookie_domain, 0
+		);
 		$this->CI->output->set_cookie($array);
 	}
-
-	// --------------------------------------------------------------------
 
 	/**
 	 * Write the session cookie
 	 *
-	 * @access	public
-	 * @return	void
+	 * @access    public
+	 * @return    void
 	 */
-	function _set_cookie($cookie_data = NULL)
+	function _set_cookie($cookie_data = null)
 	{
-		if (is_null($cookie_data))
-		{
+		if (is_null($cookie_data)) {
 			$cookie_data = $this->userdata;
 		}
 
 		// Serialize the userdata for the cookie
 		$cookie_data = $this->_serialize($cookie_data);
 
-		if ($this->sess_encrypt_cookie == TRUE)
-		{
+		if ($this->sess_encrypt_cookie == true) {
 			$cookie_data = $this->CI->encrypt->encode($cookie_data);
-		}
-		else
-		{
+		} else {
 			// if encryption is not used, we provide an md5 hash to prevent userside tampering
-			$cookie_data = $cookie_data.md5($cookie_data.$this->encryption_key);
+			$cookie_data = $cookie_data . md5($cookie_data . $this->encryption_key);
 		}
 
-		$expire = ($this->sess_expire_on_close === TRUE) ? 0 : $this->sess_expiration + time();
+		$expire = ($this->sess_expire_on_close === true) ? 0 : $this->sess_expiration + time();
 
 		// Set the cookie: modified for CIUnit
 		$array = array(
-					$this->sess_cookie_name,
-					$cookie_data,
-					$expire,
-					$this->cookie_path,
-					$this->cookie_domain,
-					$this->cookie_secure
-				);
+			$this->sess_cookie_name, $cookie_data, $expire, $this->cookie_path, $this->cookie_domain,
+			$this->cookie_secure
+		);
 		$this->CI->output->set_cookie($array);
 	}
 }
